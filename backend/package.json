@@ -4,7 +4,15 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "build": "pkg . --targets node18-win-x64 --output ../Acueducto.exe"
+  },
+  "bin": "src/server.js",
+  "pkg": {
+    "assets": [
+      "public/**/*"
+    ],
+    "outputPath": ".."
   },
   "keywords": [],
   "author": "",
@@ -18,6 +26,7 @@
     "zod": "^4.2.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "pkg": "^5.8.1"
   }
 }

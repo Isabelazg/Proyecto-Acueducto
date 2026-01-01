@@ -2,6 +2,9 @@
 
 Sistema completo para llevar el control de ingresos y egresos de un acueducto comunitario, con gestión de personas, pagos mensuales y gastos.
 
+> 📖 **Para usuarios finales:** Ver [INSTRUCCIONES.md](INSTRUCCIONES.md) para instalar y usar el sistema.  
+> 👨‍💻 **Para desarrolladores:** Continúa leyendo este README.
+
 ## 🚀 Características
 
 - **Gestión de Personas**: Agregar, activar/desactivar personas que deben pagar la cuota mensual
@@ -233,11 +236,53 @@ expense (id, period, amount, description, spent_at)
 other_income (id, period, amount, description, received_at)
 ```
 
+## 📦 Despliegue Local (Para Usuario Final)
+
+El sistema se puede entregar como un **ejecutable standalone** que NO requiere instalar nada.
+
+### Para el desarrollador - Crear el paquete:
+
+```powershell
+# 1. Construir frontend y ejecutable
+.\CONSTRUIR.bat
+
+# 2. Crear carpeta portable
+.\EMPAQUETAR.bat
+
+# 3. Comprimir la carpeta Acueducto_Portable
+# 4. Entregar al usuario
+```
+
+### Para el usuario final:
+
+El usuario recibe:
+```
+Acueducto_Portable/
+├── Acueducto.exe       ← Ejecutable (incluye Node.js)
+├── INICIAR.bat         ← Doble clic para iniciar
+├── INSTRUCCIONES.md    ← Guía de uso
+└── public/             ← Interfaz web
+```
+
+**Uso:**
+1. Descomprimir en cualquier carpeta
+2. Doble clic en `INICIAR.bat`
+3. ¡Listo! (sin instalaciones)
+
+**Requisitos del usuario:** ✅ NINGUNO
+
+El ejecutable incluye:
+- Node.js embebido
+- Todo el backend
+- La interfaz web
+- Solo falta crear `data.db` (se crea automáticamente)
+
 ## 🤝 Contribuir
 
 Este proyecto está diseñado para ser fácilmente extendible. Algunas ideas:
 
 - ✅ ~~Exportar datos a Excel~~ (Ya implementado)
+- ✅ ~~Despliegue local fácil~~ (Ya implementado)
 - Agregar reportes anuales consolidados
 - Gráficos de evolución del balance con Chart.js
 - Notificaciones de pagos pendientes vía WhatsApp
