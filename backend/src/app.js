@@ -2,11 +2,15 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 
+const { dbReady } = require("./db");
 const { peopleRouter } = require("./routes/people");
 const { periodsRouter } = require("./routes/periods");
 const { balanceRouter } = require("./routes/balance");
 
-function createApp() {
+async function createApp() {
+  // Esperar a que la base de datos esté lista
+  await dbReady;
+  
   const app = express();
 
   app.use(
@@ -30,7 +34,8 @@ function createApp() {
     const frontendPath = path.join(__dirname, '..', 'public');
     app.use(express.static(frontendPath));
     
-    app.get('*', (req, res) => {
+    // Solo servir index.html para rutas que NO empiecen con /api
+    app.get(/^(?!\/api).*/, (req, res) => {
       res.sendFile(path.join(frontendPath, 'index.html'));
     });
   } else {

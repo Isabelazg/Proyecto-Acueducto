@@ -1,13 +1,16 @@
 const { createApp } = require("./app");
 
-// Forzar modo producción cuando se ejecuta como .exe
-if (process.pkg) {
-  process.env.NODE_ENV = 'production';
+const port = process.env.PORT ? Number(process.env.PORT) : 3001;
+
+async function startServer() {
+  const app = await createApp();
+  
+  app.listen(port, () => {
+    console.log(`Backend escuchando en http://localhost:${port}`);
+  });
 }
 
-const port = process.env.PORT ? Number(process.env.PORT) : 3001;
-const app = createApp();
-
-app.listen(port, () => {
-  console.log(`Backend escuchando en http://localhost:${port}`);
+startServer().catch(err => {
+  console.error('Error al iniciar el servidor:', err);
+  process.exit(1);
 });

@@ -1,0 +1,74 @@
+{
+  "name": "acueducto-app",
+  "version": "1.0.0",
+  "description": "Sistema de gestión de Acueducto",
+  "main": "main.js",
+  "scripts": {
+    "install-all": "cd frontend && npm install && cd ../backend && npm install",
+    "build-frontend": "cd frontend && npm run build",
+    "copy-frontend": "node scripts/copy-frontend.js",
+    "build-backend": "echo Backend no requiere compilación",
+    "electron-dev": "electron .",
+    "build": "npm run build-frontend && npm run copy-frontend",
+    "dist": "npm run build && electron-builder",
+    "dist-win": "npm run build && electron-builder --win"
+  },
+  "build": {
+    "appId": "com.acueducto.app",
+    "productName": "Acueducto",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "backend/src/**/*",
+      "backend/public/**/*",
+      "backend/data/**/*",
+      "backend/node_modules/**/*",
+      "backend/package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "sign": null
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    },
+    "extraResources": [
+      {
+        "from": "backend/data",
+        "to": "data",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
+  },
+  "keywords": [
+    "acueducto",
+    "electron"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "electron-rebuild": "^3.2.9"
+  },
+  "dependencies": {
+    "fs-extra": "^11.2.0"
+  }
+}

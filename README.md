@@ -2,8 +2,25 @@
 
 Sistema completo para llevar el control de ingresos y egresos de un acueducto comunitario, con gestión de personas, pagos mensuales y gastos.
 
-> 📖 **Para usuarios finales:** Ver [INSTRUCCIONES.md](INSTRUCCIONES.md) para instalar y usar el sistema.  
-> 👨‍💻 **Para desarrolladores:** Continúa leyendo este README.
+## ⚡ INICIO RÁPIDO - APLICACIÓN DE ESCRITORIO
+
+Este proyecto se entrega como **aplicación de escritorio (.exe)** profesional con Electron:
+
+```bash
+1. INSTALAR_DEPENDENCIAS.bat    # Solo primera vez
+2. COMPILAR_ELECTRON.bat         # Genera el .exe
+3. El instalador estará en: dist\Acueducto Setup 1.0.0.exe
+```
+
+### Scripts disponibles
+
+- **INSTALAR_DEPENDENCIAS.bat** - Instala todas las dependencias del proyecto
+- **COMPILAR_ELECTRON.bat** - Compila el frontend y genera el instalador
+- **INICIAR_ELECTRON.bat** - Ejecuta la aplicación en modo desarrollo
+- **PROBAR.bat** - Prueba rápida de la aplicación
+- **VERIFICAR.bat** - Verifica que el entorno esté configurado correctamente
+
+---
 
 ## 🚀 Características
 
@@ -236,60 +253,36 @@ expense (id, period, amount, description, spent_at)
 other_income (id, period, amount, description, received_at)
 ```
 
-## 📦 Despliegue Local (Para Usuario Final)
+## 📦 Despliegue
 
-El sistema se puede entregar como un **ejecutable standalone** que NO requiere instalar nada.
-
-### Para el desarrollador - Crear el paquete:
+### Modo Desarrollo
 
 ```powershell
-# 1. Construir frontend y ejecutable
-.\CONSTRUIR.bat
+# Backend
+cd backend
+npm run dev  # http://localhost:3001
 
-# 2. Crear carpeta portable
-.\EMPAQUETAR.bat
+# Frontend (otra terminal)
+cd frontend
+npm run dev  # http://localhost:5173
 
-# 3. Comprimir la carpeta Acueducto_Portable
-# 4. Entregar al usuario
+# Electron (con todo compilado)
+npm run electron-dev
 ```
 
-### Para el usuario final:
+### Modo Producción
 
-El usuario recibe:
-```
-Acueducto_Portable/
-├── Acueducto.exe       ← Ejecutable (incluye Node.js)
-├── INICIAR.bat         ← Doble clic para iniciar
-├── INSTRUCCIONES.md    ← Guía de uso
-└── public/             ← Interfaz web
+```powershell
+# Generar instalador de Windows
+COMPILAR_ELECTRON.bat
+
+# El instalador estará en: dist\Acueducto Setup 1.0.0.exe
 ```
 
-**Uso:**
-1. Descomprimir en cualquier carpeta
-2. Doble clic en `INICIAR.bat`
-3. ¡Listo! (sin instalaciones)
-
-**Requisitos del usuario:** ✅ NINGUNO
-
-El ejecutable incluye:
-- Node.js embebido
-- Todo el backend
-- La interfaz web
-- Solo falta crear `data.db` (se crea automáticamente)
-
-## 🤝 Contribuir
-
-Este proyecto está diseñado para ser fácilmente extendible. Algunas ideas:
-
-- ✅ ~~Exportar datos a Excel~~ (Ya implementado)
-- ✅ ~~Despliegue local fácil~~ (Ya implementado)
-- Agregar reportes anuales consolidados
-- Gráficos de evolución del balance con Chart.js
-- Notificaciones de pagos pendientes vía WhatsApp
-- Sistema de recordatorios automáticos
-- Historial de cambios en cuotas individuales
-- Sistema de autenticación con roles (administrador/tesorero/consulta)
-- Backup automático de la base de datos
-- Modo offline con sincronización
+El instalador incluye:
+- Node.js runtime embebido
+- Backend con SQLite
+- Frontend compilado
+- Configuración de inicio automático
 
 ---

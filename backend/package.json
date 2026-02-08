@@ -4,29 +4,19 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js",
-    "build": "pkg . --targets node18-win-x64 --output ../Acueducto.exe"
-  },
-  "bin": "src/server.js",
-  "pkg": {
-    "assets": [
-      "public/**/*"
-    ],
-    "outputPath": ".."
+    "start": "node src/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "better-sqlite3": "^12.5.0",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "sql.js": "^1.13.0",
     "zod": "^4.2.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11",
-    "pkg": "^5.8.1"
+    "nodemon": "^3.1.11"
   }
 }

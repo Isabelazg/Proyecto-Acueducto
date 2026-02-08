@@ -1,19 +1,82 @@
-require("dotenv/config");
-
 const path = require("path");
-const Database = require("better-sqlite3");
+const fs = require("fs");
+const initSqlJs = require("sql.js");
 
-const dbFile = process.env.DB_FILE
-  ? path.resolve(process.env.DB_FILE)
+// Determinar la ubicación de la base de datos
+const dbFile = process.env.NODE_ENV === 'production'
+  ? path.join(path.dirname(process.execPath), "data.db")
   : path.resolve(__dirname, "..", "data.db");
 
-const db = new Database(dbFile);
+let db = null;
 
-db.pragma("journal_mode = WAL");
-db.pragma("foreign_keys = ON");
+// Inicializar sql.js de forma síncrona usando una promesa
+async function initDb() {
+  const SQL = await initSqlJs();
+  
+  // Cargar base de datos existente o crear una nueva
+  if (fs.existsSync(dbFile)) {
+    const buffer = fs.readFileSync(dbFile);
+    db = new SQL.Database(buffer);
+  } else {
+    db = new SQL.Database();
+  }
+  
+  // Habilitar foreign keys
+  db.run("PRAGMA foreign_keys = ON");
+  
+  return db;
+}
 
-function initSchema() {
-  db.exec(`
+// Función para guardar la base de datos en disco
+function saveDb() {
+  if (db) {
+    const data = db.export();
+    const buffer = Buffer.from(data);
+    fs.writeFileSync(dbFile, buffer);
+  }
+}
+
+// Wrapper para ejecutar queries y auto-guardar
+const dbProxy = {
+  prepare: (sql) => {
+    if (!db) throw new Error("Database not initialized");
+    const stmt = db.prepare(sql);
+    return {
+      run: (...params) => {
+        const result = stmt.run(params);
+        saveDb();
+        return result;
+      },
+      get: (...params) => {
+        stmt.bind(params);
+        const hasRow = stmt.step();
+        if (!hasRow) return undefined;
+        const row = stmt.getAsObject();
+        stmt.reset();
+        return row;
+      },
+      all: (...params) => {
+        stmt.bind(params);
+        const rows = [];
+        while (stmt.step()) {
+          rows.push(stmt.getAsObject());
+        }
+        stmt.reset();
+        return rows;
+      }
+    };
+  },
+  exec: (sql) => {
+    if (!db) throw new Error("Database not initialized");
+    db.run(sql);
+    saveDb();
+  }
+};
+
+async function initSchema() {
+  await initDb();
+  
+  dbProxy.exec(`
     CREATE TABLE IF NOT EXISTS person (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL UNIQUE,
@@ -64,6 +127,7 @@ function initSchema() {
   `);
 }
 
-initSchema();
+// Exportar tanto la promesa de inicialización como el proxy
+const dbReady = initSchema();
 
-module.exports = { db };
+module.exports = { db: dbProxy, dbReady, saveDb };
